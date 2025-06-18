@@ -1,5 +1,7 @@
 import { BsThreeDotsVertical } from "react-icons/bs";
 
+import Image from "next/image";
+
 export default function TournamentCard() {
   return (
     <div className="relative flex items-start gap-4 p-4 rounded-xl ml-5 text-white">
@@ -9,11 +11,8 @@ export default function TournamentCard() {
       </div>
 
       {/* Card Image */}
-      <img
-        src="/img/valorant-card.png"
-        alt="Tournament"
-        className="w-56 h-auto rounded-md object-cover"
-      />
+ {/* Card Content */}
+  <Image src="/img/valorant-card.png" alt="Tournament" width={230} height={140} className="rounded-lg" />
 
       <div className="flex flex-col gap-1 text-[#95ACDA] text-sm pr-6">
         {/* Title */}
@@ -22,7 +21,7 @@ export default function TournamentCard() {
         </h2>
 
         {/* Info line */}
-        <p>Mumbai • 5v5 • Prize Pool: ₹500 • 20 slots</p>
+        <p className="">Mumbai • 5v5 • Prize Pool: ₹500 • 20 slots</p>
 
         {/* Date + Fees */}
         <div className="flex items-center gap-2">
