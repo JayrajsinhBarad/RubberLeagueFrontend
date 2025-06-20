@@ -1,0 +1,359 @@
+"use client";
+
+import Image from "next/image";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { FaGamepad } from "react-icons/fa";
+import { PiUsersThreeFill } from "react-icons/pi";
+import { MdDateRange } from "react-icons/md";
+
+export default function TournamentInfoPage() {
+  const [activeTab, setActiveTab] = useState("overview");
+  const tabs = ["overview", "standings", "matches", "teams", "prizes"];
+
+  return (
+    <main className="min-h-screen bg-[#0F111A] text-white">
+      {/* Banner */}
+      <div className="relative w-full h-[480px]">
+        <Image
+          src="/img/valo-omen.jpg"
+          alt="Valorant Tournament Banner"
+          fill
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0F111A]/80 via-[#0F111A]/90 to-[#0F111A] px-4 sm:px-10 py-8 flex flex-col justify-start sm:justify-start">
+          <div className="space-y-2 max-w-[600px]">
+            <p className="text-sm sm:text-base text-white font-medium">
+              Tournaments
+            </p>
+            <h1 className="text-3xl sm:text-5xl font-bold leading-tight">
+              Valorant 5v5 Tournament
+            </h1>
+            <p className="text-white/70 text-sm sm:text-base">
+              Match begins in 7 hours • Wed, June 11, 05:00 PM UTC
+            </p>
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-xs px-2 py-1 bg-cyan-500 text-white rounded-full w-fit">
+                Open
+              </span>
+            </div>
+            {/* Mobile region + button */}
+            <div className="sm:hidden space-y-4 pt-4 mt-24 relative">
+              {/* Top-right Regions */}
+              <div className="absolute top-0 right-0 flex flex-col items-end text-right gap-1">
+                <p className="text-white text-lg font-semibold">Regions</p>
+                <div className="flex items-center gap-2 text-white/80 text-sm">
+                  <Image
+                    src="https://flagcdn.com/w40/in.png"
+                    alt="India"
+                    width={20}
+                    height={15}
+                    className="rounded-sm border border-gray-300"
+                  />
+                  <span>Mumbai</span>
+                </div>
+              </div>
+
+              {/* Starts in + Join button */}
+              <div className="pt-14">
+                <p className="text-right text-white text-sm font-normal">
+                  Starts in 07:24:10
+                </p>
+                <Button className="mt-2 bg-[#793FED] hover:bg-[#6B21A8] text-white text-sm px-6 py-2 rounded-md shadow-md w-full">
+                  Join tournament
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Right side overlay - desktop only */}
+        <div className="absolute hidden sm:flex right-10 top-10 flex-col items-end text-sm ">
+          <div className="flex flex-col items-end gap-0.5 text-white">
+            <p className="text-[22px] font-bold">Regions</p>
+            <div className="flex items-center gap-2">
+              <Image
+                src="https://flagcdn.com/w40/in.png"
+                alt="India Flag"
+                width={24}
+                height={16}
+                className="rounded-sm border border-gray-300"
+              />
+              <span className="text-sm font-medium">Mumbai</span>
+            </div>
+          </div>
+          <div className="mt-70 flex flex-col items-center text-center ">
+            <p className="text-sm text-white font-normal mb-2">
+              Starts in 07:24:10
+            </p>
+            <Button className="bg-[#793FED] hover:bg-[#6B21A8] text-white text-sm px-5 py-2 rounded-md shadow-md">
+              Join tournament
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      {/* Tabs */}
+      {/*    <div className="bg-[#0F172A] px-10 pt-14">
+        <ul className="flex justify-center gap-8 text-sm semibold text-[#9CA3AF] border-b border-[#1F2430] w-fit mx-auto">
+          {tabs.map((tab) => (
+            <li
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`relative pb-2 cursor-pointer transition-all ${
+                activeTab === tab
+                  ? "text-white after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-[#8B5CF6]"
+                  : "hover:text-white"
+              }`}
+            >
+              {tab.charAt(0).toUpperCase() + tab.slice(1)}
+            </li>
+          ))}
+        </ul>
+      </div> */}
+
+      {/* Tabs */}
+      <div className="bg-[#0F172A] px-4 sm:px-10 pt-14">
+        <div className="overflow-x-auto">
+          <ul className="flex flex-nowrap justify-start sm:justify-center gap-4 sm:gap-8 text-sm font-semibold text-[#9CA3AF] border-b border-[#1F2430] w-fit mx-auto">
+            {tabs.map((tab) => (
+              <li
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`relative pb-2 cursor-pointer transition-all whitespace-nowrap ${
+                  activeTab === tab
+                    ? "text-white after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-[#8B5CF6]"
+                    : "hover:text-white"
+                }`}
+              >
+                {tab.charAt(0).toUpperCase() + tab.slice(1)}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      {/* Main Section */}
+      <main className="bg-[#0F172A] text-white min-h-screen">
+        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-10 py-16 space-y-16">
+          {activeTab === "overview" && (
+            <div className="grid grid-cols-1 xl:grid-cols-4 gap-6 xl:gap-10">
+              <div className="xl:col-span-3 space-y-10">
+                <div className="space-y-6">
+                  <h2 className="text-2xl font-bold">Format</h2>
+                  <div className="grid grid-cols-2 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+                    <InfoCard
+                      icon={<FaGamepad className="text-white text-3xl" />}
+                      label="Game"
+                      value="VALORANT"
+                    />
+                    <InfoCard
+                      icon={
+                        <MdDateRange className="text-orange-400 text-3xl" />
+                      }
+                      label="Date/Time"
+                      value="Wed, June 11, 04:00 PM"
+                    />
+                    <InfoCard
+                      icon={
+                        <PiUsersThreeFill className="text-blue-400 text-3xl" />
+                      }
+                      label="Team size"
+                      value="5v5"
+                    />
+                    <InfoCard
+                      icon={
+                        <Image
+                          src="/icons/prize.svg"
+                          alt="Prize Icon"
+                          width={35}
+                          height={35}
+                          className="object-contain"
+                        />
+                      }
+                      label="Entry prize"
+                      value="Per person Free"
+                    />
+                    <InfoCard
+                      icon={
+                        <Image
+                          src="/icons/Prize-pool.svg"
+                          alt="Prize Icon"
+                          width={35}
+                          height={35}
+                          className="object-contain"
+                        />
+                      }
+                      label="Prize pool"
+                      value="₹2000"
+                    />
+                    <InfoCard
+                      icon={
+                        <Image
+                          src="/icons/format.svg"
+                          alt="Prize Icon"
+                          width={35}
+                          height={35}
+                          className="object-contain"
+                        />
+                      }
+                      label="Format"
+                      value="Single Elimination"
+                    />
+                  </div>
+                </div>
+
+                {/* Tournament Info */}
+                <div className="space-y-6">
+                  <h2 className="text-2xl font-bold">Tournament Information</h2>
+                  <ul className="list-disc list-inside text-gray-300 space-y-2">
+                    <li>Tournament format: Single elimination 5v5</li>
+                    <li>
+                      Server: Mumbai / Singapore (decided by mutual agreement)
+                    </li>
+                  </ul>
+
+                  <div>
+                    <h3 className="text-lg font-bold mb-2">Rules</h3>
+                    <ul className="list-disc list-inside text-gray-300 space-y-2">
+                      <li>
+                        A game that has been played past the first round is
+                        deemed valid. If your game host starts with wrong
+                        settings, report it to admins before match starts.
+                      </li>
+                      <li>
+                        Verify your results in the lobby even if you lose.
+                      </li>
+                      <li>You must follow the Ban/Pick Order.</li>
+                      <li>Default settings are Cheats: OFF</li>
+                      <li>
+                        If no server agreement, Frankfurt 1/2 should be used.
+                      </li>
+                    </ul>
+                  </div>
+
+                  <div>
+                    <h3 className="text-lg font-bold mb-2">Help</h3>
+                    <p className="text-gray-300">
+                      For any issues or disputes, contact the tournament admins
+                      via the official Discord support channel.
+                    </p>
+                  </div>
+
+                  <div>
+                    <h3 className="text-lg font-bold mb-2">Reports:</h3>
+                    <p className="text-gray-300">
+                      Report players for cheating, toxicity, smurfing, or rule
+                      violations in the official Discord report channel.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="xl:col-span-1 space-y-10">
+                <div className="space-y-3">
+                  <h3 className="text-xl font-bold p-2 rounded">Teams</h3>
+                  <div className="w-full h-auto p-4 rounded-xl border border-[#2F384C] flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-0 text-sm text-blue-300">
+                    <div className="text-center flex-1">
+                      <p className="font-medium">Registered</p>
+                      <p className="text-white text-lg font-normal">15</p>
+                    </div>
+                    <div className="text-center flex-1">
+                      <p className="font-medium flex items-center justify-center gap-1">
+                        Ready
+                      </p>
+                      <p className="text-white text-lg font-normal">10</p>
+                    </div>
+                    <div className="text-center flex-1">
+                      <p className="font-medium">Slots</p>
+                      <p className="text-white text-lg font-normal">20</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="space-y-3">
+                  <h3 className="text-xl font-bold">Timeline</h3>
+                  <div className="space-y-5">
+                    <TimelineItem
+                      date="JUN"
+                      day="11"
+                      time="Wed 04:00 PM"
+                      title="Ready window opens"
+                      description="Ready up and verify that you're eligible to play."
+                    />
+                    <TimelineItem
+                      date="JUN"
+                      day="11"
+                      time="Wed 05:00 PM"
+                      title="Registration closes"
+                      description="You can no longer register."
+                    />
+                    <TimelineItem
+                      date="JUN"
+                      day="11"
+                      time="Wed 05:00 PM"
+                      title="Ready window closes"
+                      description="You can no longer ready up."
+                    />
+                    <TimelineItem
+                      date="JUN"
+                      day="11"
+                      time="Wed 05:00 PM"
+                      title="Start"
+                      description="The tournament starts and you will get notified about your first match."
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </main>
+    </main>
+  );
+}
+
+function InfoCard({
+  icon,
+  label,
+  value,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+}) {
+  return (
+    <div className="bg-[#15213A] rounded-xl px-4 py-4 w-full h-[120px] flex flex-col justify-between">
+      <div className="mb-2">{icon}</div>
+      <div className="text-sm text-gray-300 font-medium">{label}</div>
+      <div className="text-white font-semibold text-sm">{value}</div>
+    </div>
+  );
+}
+
+function TimelineItem({
+  date,
+  day,
+  time,
+  title,
+  description,
+}: {
+  date: string;
+  day: string;
+  time: string;
+  title: string;
+  description: string;
+}) {
+  return (
+    <div className="flex items-start gap-4">
+      <div className="flex flex-col items-center justify-center w-12 h-14 bg-[#0F111A] border border-white/20 rounded-md">
+        <span className="text-[10px] text-white font-semibold">{date}</span>
+        <span className="text-base text-white font-bold">{day}</span>
+      </div>
+      <div className="flex-1 space-y-1">
+        <p className="text-sm text-white/70">{time}</p>
+        <p className="text-white font-bold">{title}</p>
+        <p className="text-white text-sm">{description}</p>
+      </div>
+    </div>
+  );
+}
