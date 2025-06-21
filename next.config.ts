@@ -1,3 +1,15 @@
+
+
+/* import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
+};
+
+
+
+export default nextConfig; */
+
+// next.config.js or next.config.ts
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
@@ -9,8 +21,8 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  // ✅ Add this to suppress the cross-origin warning
-  allowedDevOrigins: ["*"],
+  allowedDevOrigins: ["192.168.1.7"], 
 };
 
 export default nextConfig;
+

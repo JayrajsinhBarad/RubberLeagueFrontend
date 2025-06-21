@@ -38,31 +38,34 @@ export default function TournamentInfoPage() {
               </span>
             </div>
             {/* Mobile region + button */}
-            <div className="sm:hidden space-y-4 pt-4 mt-24 relative">
-              {/* Top-right Regions */}
-              <div className="absolute top-0 right-0 flex flex-col items-end text-right gap-1">
-                <p className="text-white text-lg font-semibold">Regions</p>
-                <div className="flex items-center gap-2 text-white/80 text-sm">
-                  <Image
-                    src="https://flagcdn.com/w40/in.png"
-                    alt="India"
-                    width={20}
-                    height={15}
-                    className="rounded-sm border border-gray-300"
-                  />
-                  <span>Mumbai</span>
+            <div className="sm:hidden space-y-4 mt-30 pt-4">
+              {/* Top Row: Regions (left) and Starts in (right) */}
+              <div className="flex justify-between items-center">
+                {/* Regions label + flag block */}
+                <div className="flex flex-col items-start">
+                  <p className="text-white text-lg font-semibold">Regions</p>
+                  <div className="flex items-center gap-2 text-white/80 text-sm">
+                    <Image
+                      src="https://flagcdn.com/w40/in.png"
+                      alt="India"
+                      width={20}
+                      height={15}
+                      className="rounded-sm border border-gray-300"
+                    />
+                    <span>Mumbai</span>
+                  </div>
                 </div>
-              </div>
 
-              {/* Starts in + Join button */}
-              <div className="pt-14">
-                <p className="text-right text-white text-sm font-normal">
+                {/* Starts in text on the right */}
+                <p className="text-white text-sm font-normal pt-2">
                   Starts in 07:24:10
                 </p>
-                <Button className="mt-2 bg-[#793FED] hover:bg-[#6B21A8] text-white text-sm px-6 py-2 rounded-md shadow-md w-full">
-                  Join tournament
-                </Button>
               </div>
+
+              {/* Join Button */}
+              <Button className="bg-[#793FED] hover:bg-[#6B21A8] text-white text-sm px-6 py-2 rounded-md shadow-md w-full">
+                Join tournament
+              </Button>
             </div>
           </div>
         </div>
@@ -93,26 +96,7 @@ export default function TournamentInfoPage() {
         </div>
       </div>
 
-      {/* Tabs */}
-      {/*    <div className="bg-[#0F172A] px-10 pt-14">
-        <ul className="flex justify-center gap-8 text-sm semibold text-[#9CA3AF] border-b border-[#1F2430] w-fit mx-auto">
-          {tabs.map((tab) => (
-            <li
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`relative pb-2 cursor-pointer transition-all ${
-                activeTab === tab
-                  ? "text-white after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-[#8B5CF6]"
-                  : "hover:text-white"
-              }`}
-            >
-              {tab.charAt(0).toUpperCase() + tab.slice(1)}
-            </li>
-          ))}
-        </ul>
-      </div> */}
-
-      {/* Tabs */}
+      {/* tabs */}
       <div className="bg-[#0F172A] px-4 sm:px-10 pt-14">
         <div className="overflow-x-auto">
           <ul className="flex flex-nowrap justify-start sm:justify-center gap-4 sm:gap-8 text-sm font-semibold text-[#9CA3AF] border-b border-[#1F2430] w-fit mx-auto">
