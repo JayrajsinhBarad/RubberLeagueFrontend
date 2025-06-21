@@ -9,6 +9,7 @@ import { MdDateRange } from "react-icons/md";
 
 export default function TournamentInfoPage() {
   const [activeTab, setActiveTab] = useState("overview");
+  const [open, setOpen] = useState(false);
   const tabs = ["overview", "standings", "matches", "teams", "prizes"];
 
   return (
@@ -23,25 +24,18 @@ export default function TournamentInfoPage() {
         />
         <div className="absolute inset-0 bg-gradient-to-b from-[#0F111A]/80 via-[#0F111A]/90 to-[#0F111A] px-4 sm:px-10 py-8 flex flex-col justify-start sm:justify-start">
           <div className="space-y-2 max-w-[600px]">
-            <p className="text-sm sm:text-base text-white font-medium">
-              Tournaments
-            </p>
-            <h1 className="text-3xl sm:text-5xl font-bold leading-tight">
-              Valorant 5v5 Tournament
-            </h1>
+            <p className="text-sm sm:text-base text-white font-medium">Tournaments</p>
+            <h1 className="text-3xl sm:text-5xl font-bold leading-tight">Valorant 5v5 Tournament</h1>
             <p className="text-white/70 text-sm sm:text-base">
               Match begins in 7 hours • Wed, June 11, 05:00 PM UTC
             </p>
             <div className="flex flex-wrap items-center gap-2">
-              <span className="text-xs px-2 py-1 bg-cyan-500 text-white rounded-full w-fit">
-                Open
-              </span>
+              <span className="text-xs px-2 py-1 bg-cyan-500 text-white rounded-full w-fit">Open</span>
             </div>
-            {/* Mobile region + button */}
+
+            {/* Mobile region + join button */}
             <div className="sm:hidden space-y-4 mt-30 pt-4">
-              {/* Top Row: Regions (left) and Starts in (right) */}
               <div className="flex justify-between items-center">
-                {/* Regions label + flag block */}
                 <div className="flex flex-col items-start">
                   <p className="text-white text-lg font-semibold">Regions</p>
                   <div className="flex items-center gap-2 text-white/80 text-sm">
@@ -55,23 +49,21 @@ export default function TournamentInfoPage() {
                     <span>Mumbai</span>
                   </div>
                 </div>
-
-                {/* Starts in text on the right */}
-                <p className="text-white text-sm font-normal pt-2">
-                  Starts in 07:24:10
-                </p>
+                <p className="text-white text-sm font-normal pt-2">Starts in 07:24:10</p>
               </div>
 
-              {/* Join Button */}
-              <Button className="bg-[#793FED] hover:bg-[#6B21A8] text-white text-sm px-6 py-2 rounded-md shadow-md w-full">
+              <Button
+                onClick={() => setOpen(true)}
+                className="bg-[#793FED] hover:bg-[#6B21A8] text-white text-sm px-6 py-2 rounded-md shadow-md w-full"
+              >
                 Join tournament
               </Button>
             </div>
           </div>
         </div>
 
-        {/* Right side overlay - desktop only */}
-        <div className="absolute hidden sm:flex right-10 top-10 flex-col items-end text-sm ">
+        {/* Right desktop overlay */}
+        <div className="absolute hidden sm:flex right-10 top-10 flex-col items-end text-sm">
           <div className="flex flex-col items-end gap-0.5 text-white">
             <p className="text-[22px] font-bold">Regions</p>
             <div className="flex items-center gap-2">
@@ -85,16 +77,59 @@ export default function TournamentInfoPage() {
               <span className="text-sm font-medium">Mumbai</span>
             </div>
           </div>
-          <div className="mt-70 flex flex-col items-center text-center ">
-            <p className="text-sm text-white font-normal mb-2">
-              Starts in 07:24:10
-            </p>
-            <Button className="bg-[#793FED] hover:bg-[#6B21A8] text-white text-sm px-5 py-2 rounded-md shadow-md">
+          <div className="mt-75 flex flex-col items-center text-center">
+            <p className="text-sm text-white font-normal mb-2">Starts in 07:24:10</p>
+            <Button
+              onClick={() => setOpen(true)}
+              className="bg-[#793FED] hover:bg-[#6B21A8] text-white text-sm px-5 py-2 rounded-md shadow-md"
+            >
               Join tournament
             </Button>
           </div>
         </div>
       </div>
+
+      {/* Registration Modal */}
+      {open && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
+          <div className="bg-[#1A2238] rounded-2xl p-6 w-full max-w-xl relative">
+            <button
+              onClick={() => setOpen(false)}
+              className="absolute top-4 right-4 text-white text-2xl font-bold"
+            >
+              ×
+            </button>
+            <h2 className="text-3xl font-bold text-white mb-2">Registration</h2>
+            <p className="text-gray-400 mb-6">Fill the form to enter the tournament lobby.</p>
+            <form className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <input
+                placeholder="In-Game ID"
+                className="bg-[#111827] text-white px-4 py-2 rounded-md border border-gray-600"
+              />
+              <input
+                placeholder="Email"
+                className="bg-[#111827] text-white px-4 py-2 rounded-md border border-gray-600"
+              />
+              <input
+                placeholder="Team Name"
+                className="bg-[#111827] text-white px-4 py-2 rounded-md border border-gray-600 sm:col-span-1"
+              />
+              <input
+                placeholder="Number of Players"
+                className="bg-[#111827] text-white px-4 py-2 rounded-md border border-gray-600 sm:col-span-1"
+              />
+              <div className="col-span-full mt-4">
+                <Button
+                  type="submit"
+                  className="w-full bg-[#8B5CF6] hover:bg-[#6B21A8] text-white text-lg font-bold py-2 rounded-xl"
+                >
+                  Submit
+                </Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
       {/* tabs */}
       <div className="bg-[#0F172A] px-4 sm:px-10 pt-14">
