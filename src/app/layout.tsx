@@ -25,6 +25,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Valorant Tournaments",
   description: "Compete in Valorant tournaments and win prizes.",
+  
 };
 
 export default function RootLayout({

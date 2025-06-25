@@ -6,10 +6,14 @@ import { Button } from "@/components/ui/button";
 import { FaGamepad } from "react-icons/fa";
 import { PiUsersThreeFill } from "react-icons/pi";
 import { MdDateRange } from "react-icons/md";
+import Standings from "@/components/Standings";
+
 
 export default function TournamentInfoPage() {
   const [activeTab, setActiveTab] = useState("overview");
   const [open, setOpen] = useState(false);
+  const [agreed, setAgreed] = useState(false);
+  const [rank, setRank] = useState("");
   const tabs = ["overview", "standings", "matches", "teams", "prizes"];
 
   return (
@@ -89,39 +93,52 @@ export default function TournamentInfoPage() {
         </div>
       </div>
 
-      {/* Registration Modal */}
+     {/* Modal */}
       {open && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
-          <div className="bg-[#1A2238] rounded-2xl p-6 w-full max-w-xl relative">
-            <button
-              onClick={() => setOpen(false)}
-              className="absolute top-4 right-4 text-white text-2xl font-bold"
-            >
-              ×
-            </button>
+          <div className="bg-[#1A2238] rounded-2xl p-6 w-full max-w-2xl relative">
+            <button onClick={() => setOpen(false)} className="absolute top-4 right-4 text-white text-xl font-bold">×</button>
             <h2 className="text-3xl font-bold text-white mb-2">Registration</h2>
             <p className="text-gray-400 mb-6">Fill the form to enter the tournament lobby.</p>
-            <form className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <input
-                placeholder="In-Game ID"
-                className="bg-[#111827] text-white px-4 py-2 rounded-md border border-gray-600"
-              />
-              <input
-                placeholder="Email"
-                className="bg-[#111827] text-white px-4 py-2 rounded-md border border-gray-600"
-              />
-              <input
-                placeholder="Team Name"
-                className="bg-[#111827] text-white px-4 py-2 rounded-md border border-gray-600 sm:col-span-1"
-              />
-              <input
-                placeholder="Number of Players"
-                className="bg-[#111827] text-white px-4 py-2 rounded-md border border-gray-600 sm:col-span-1"
-              />
-              <div className="col-span-full mt-4">
+            <form className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+              <input placeholder="In-Game ID" className="bg-[#111827] text-white px-4 py-3 rounded-md border border-gray-600" />
+              <input placeholder="Email" className="bg-[#111827] text-white px-4 py-3 rounded-md border border-gray-600" />
+              <input placeholder="Team Name" className="bg-[#111827] text-white px-4 py-3 rounded-md border border-gray-600" />
+              <input placeholder="Number of Players" className="bg-[#111827] text-white px-4 py-3 rounded-md border border-gray-600" />
+              <select
+                value={rank}
+                onChange={(e) => setRank(e.target.value)}
+                className="bg-[#111827] text-white px-4 py-3 rounded-md border border-gray-600 col-span-full sm:col-span-2"
+              >
+                <option value="">Select Rank</option>
+                <option>Iron</option>
+                <option>Bronze</option>
+                <option>Silver</option>
+                <option>Gold</option>
+                <option>Platinum</option>
+                <option>Diamond</option>
+                <option>Ascendant</option>
+                <option>Immortal</option>
+                <option>Radiant</option>
+              </select>
+
+              <div className="col-span-full flex items-start gap-2">
+                <input
+                  type="checkbox"
+                  checked={agreed}
+                  onChange={(e) => setAgreed(e.target.checked)}
+                  className="mt-1"
+                />
+                <label className="text-gray-300">
+                  I agree to the tournament rules, fair play policy, and terms of participation.
+                </label>
+              </div>
+
+              <div className="col-span-full mt-2">
                 <Button
                   type="submit"
-                  className="w-full bg-[#8B5CF6] hover:bg-[#6B21A8] text-white text-lg font-bold py-2 rounded-xl"
+                  disabled={!agreed}
+                  className={`w-full text-white text-lg font-bold py-3 rounded-xl ${agreed ? "bg-[#8B5CF6] hover:bg-[#6B21A8]" : "bg-gray-500 cursor-not-allowed"}`}
                 >
                   Submit
                 </Button>
@@ -132,7 +149,7 @@ export default function TournamentInfoPage() {
       )}
 
       {/* tabs */}
-      <div className="bg-[#0F172A] px-4 sm:px-10 pt-14">
+     <div className="bg-[#0F172A] px-4 sm:px-10 pt-14">
         <div className="overflow-x-auto">
           <ul className="flex flex-nowrap justify-start sm:justify-center gap-4 sm:gap-8 text-sm font-semibold text-[#9CA3AF] border-b border-[#1F2430] w-fit mx-auto">
             {tabs.map((tab) => (
@@ -326,10 +343,17 @@ export default function TournamentInfoPage() {
             </div>
           )}
         </div>
+        {activeTab === "standings" && (
+  <div className="px-4 sm:px-10 py-10">
+    <Standings />
+  </div>
+)}
       </main>
     </main>
   );
 }
+
+
 
 function InfoCard({
   icon,
