@@ -1,12 +1,24 @@
 "use client";
 
-
+import React, {useState, useEffect} from "react";
 import Image from "next/image";
 import Link from "next/link";
 import TournamentCard from "../components/TournamentCard";
 import Footer from "../components/Footer";
+import { getTournaments } from "@/services/api";
 
 export default function Home() {
+  const [tournaments, setTournaments] = useState<any>([])
+
+  const getTournamentList = async () => {
+    const result = await getTournaments()
+    setTournaments(result)
+  }
+
+  useEffect(() => {
+    getTournamentList()
+  }, [])
+
   return (
     <>
       <main className="relative h-screen w-full text-white">
@@ -36,9 +48,19 @@ export default function Home() {
       {/* Tournament Card below hero */}
       <section id="tournaments" className="bg-[#0F111A] py-12 px-6">
         <h2 className="text-white text-2xl font-bold mb-4 ml-8">Tournaments</h2>
-        <Link  href="./tournament-info" className="block w-fit">
-          <TournamentCard />
-        </Link>
+        {tournaments.length === 0 ? (
+          <div className="text-center text-gray-500 mt-10">No tournaments found.</div>
+        ) : (
+          tournaments.map((tournament: any, index: number) => (
+            <Link
+              key={`tournament-card-${index}`}
+              href={`./tournament-info/${tournament.id}`}
+              className="block w-fit"
+            >
+              <TournamentCard tournamentDetail={tournament} />
+            </Link>
+          ))
+        )}
       </section>
 
       {/* Dummy Content */}
