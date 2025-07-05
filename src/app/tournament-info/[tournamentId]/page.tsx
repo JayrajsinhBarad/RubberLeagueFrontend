@@ -1,20 +1,106 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useState, use, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { FaGamepad } from "react-icons/fa";
 import { PiUsersThreeFill } from "react-icons/pi";
 import { MdDateRange } from "react-icons/md";
 import Standings from "@/components/Standings";
+import TournamentRegistrationModal from "@/components/TournamentRegitrationModal";
+import { getTournamentById } from "@/services/api";
+import { getFormattedDateParts, getTimeDiff } from "@/helpers/formatDateTime";
 
+export interface DateParts {
+  month: string;
+  date: string;
+  year: string;
+  time: string;
+  day: string;
+}
 
-export default function TournamentInfoPage() {
+export const formattedDateParts: DateParts = {
+  month: "",
+  date: "",
+  year: "",
+  time: "",
+  day: "",
+};
+
+export default function TournamentInfoPage(props: {
+  params: Promise<{ tournamentId: string }>;
+}) {
+  const { tournamentId } = use(props.params);
   const [activeTab, setActiveTab] = useState("overview");
   const [open, setOpen] = useState(false);
-  const [agreed, setAgreed] = useState(false);
-  const [rank, setRank] = useState("");
   const tabs = ["overview", "standings", "matches", "teams", "prizes"];
+  const [tournamentDetail, setTournamentDetail] = useState<any>();
+  const [timeLeft, setTimeLeft] = useState({
+    hoursRemaining: 0,
+    hhmmssRemaining: "00:00:00",
+  });
+  const [startsAtDateParts, setStartsAtDateParts] =
+    useState<DateParts>(formattedDateParts);
+  const [registrationOpenAtDateParts, setRegistrationOpenAtDateParts] =
+    useState<DateParts>(formattedDateParts);
+  const [registrationCloseAtDateParts, setRegistrationCloseAtDateParts] =
+    useState<DateParts>(formattedDateParts);
+  const [noOfRegistredTeam, setNoOfRegisteredTeam] = useState(0);
+
+  const getTournament = async (id: string) => {
+    const result = await getTournamentById(id);
+    setTournamentDetail(result);
+  };
+
+  useEffect(() => {
+    getTournament(tournamentId);
+  }, [tournamentId]);
+
+  const manageFormattedDateParts = ({
+    startsAt,
+    registrationOpenAt,
+    registrationCloseAt,
+  }: any) => {
+    const startsAtDateParts = getFormattedDateParts(startsAt);
+    setStartsAtDateParts(startsAtDateParts);
+
+    const registrationOpenAtDateParts =
+      getFormattedDateParts(registrationOpenAt);
+    setRegistrationOpenAtDateParts(registrationOpenAtDateParts);
+
+    const registrationCloseAtDateParts =
+      getFormattedDateParts(registrationCloseAt);
+    setRegistrationCloseAtDateParts(registrationCloseAtDateParts);
+  };
+
+  useEffect(() => {
+    if (tournamentDetail) {
+      const {
+        startsAt,
+        registrationOpenAt,
+        registrationCloseAt,
+        tournamentTeams,
+      } = tournamentDetail;
+
+      setNoOfRegisteredTeam(tournamentTeams?.length ?? 0);
+
+      manageFormattedDateParts({
+        startsAt,
+        registrationOpenAt,
+        registrationCloseAt,
+      });
+
+      if (!tournamentDetail.startsAt) return;
+
+      const updateTimer = () =>
+        setTimeLeft(getTimeDiff(tournamentDetail.startsAt));
+
+      updateTimer(); // initial call
+      const interval = setInterval(updateTimer, 1000);
+
+      return () => clearInterval(interval);
+    }
+  }, [tournamentDetail]);
 
   return (
     <main className="min-h-screen bg-[#0F111A] text-white">
@@ -28,13 +114,20 @@ export default function TournamentInfoPage() {
         />
         <div className="absolute inset-0 bg-gradient-to-b from-[#0F111A]/80 via-[#0F111A]/90 to-[#0F111A] px-4 sm:px-10 py-8 flex flex-col justify-start sm:justify-start">
           <div className="space-y-2 max-w-[600px]">
-            <p className="text-sm sm:text-base text-white font-medium">Tournaments</p>
-            <h1 className="text-3xl sm:text-5xl font-bold leading-tight">Valorant 5v5 Tournament</h1>
+            <p className="text-sm sm:text-base text-white font-medium">
+              Tournament
+            </p>
+            <h1 className="text-3xl sm:text-5xl font-bold leading-tight">
+              {tournamentDetail?.name}
+            </h1>
             <p className="text-white/70 text-sm sm:text-base">
-              Match begins in 7 hours • Wed, June 11, 05:00 PM UTC
+              Match begins in {timeLeft.hoursRemaining} hours •{" "}
+              {`${startsAtDateParts.day}, ${startsAtDateParts.month} ${startsAtDateParts.date} ${startsAtDateParts.year}, ${startsAtDateParts.time} UTC`}
             </p>
             <div className="flex flex-wrap items-center gap-2">
-              <span className="text-xs px-2 py-1 bg-cyan-500 text-white rounded-full w-fit">Open</span>
+              <span className="text-xs px-2 py-1 bg-cyan-500 text-white rounded-full w-fit">
+                {tournamentDetail?.type}
+              </span>
             </div>
 
             {/* Mobile region + join button */}
@@ -53,15 +146,19 @@ export default function TournamentInfoPage() {
                     <span>Mumbai</span>
                   </div>
                 </div>
-                <p className="text-white text-sm font-normal pt-2">Starts in 07:24:10</p>
+                <p className="text-white text-sm font-normal pt-2">
+                  Starts in {timeLeft.hhmmssRemaining}
+                </p>
               </div>
 
-              <Button
-                onClick={() => setOpen(true)}
-                className="bg-[#793FED] hover:bg-[#6B21A8] text-white text-sm px-6 py-2 rounded-md shadow-md w-full"
-              >
-                Join tournament
-              </Button>
+              {noOfRegistredTeam < 4 && (
+                <Button
+                  onClick={() => setOpen(true)}
+                  className="bg-[#793FED] hover:bg-[#6B21A8] text-white text-sm px-6 py-2 rounded-md shadow-md w-full"
+                >
+                  Join tournament
+                </Button>
+              )}
             </div>
           </div>
         </div>
@@ -82,74 +179,33 @@ export default function TournamentInfoPage() {
             </div>
           </div>
           <div className="mt-75 flex flex-col items-center text-center">
-            <p className="text-sm text-white font-normal mb-2">Starts in 07:24:10</p>
-            <Button
-              onClick={() => setOpen(true)}
-              className="bg-[#793FED] hover:bg-[#6B21A8] text-white text-sm px-5 py-2 rounded-md shadow-md"
-            >
-              Join tournament
-            </Button>
+            <p className="text-sm text-white font-normal mb-2">
+              Starts in {timeLeft.hhmmssRemaining}
+            </p>
+            {noOfRegistredTeam < 4 && (
+              <Button
+                onClick={() => setOpen(true)}
+                className="bg-[#793FED] hover:bg-[#6B21A8] text-white text-sm px-5 py-2 rounded-md shadow-md"
+              >
+                Join tournament
+              </Button>
+            )}
           </div>
         </div>
       </div>
 
-     {/* Modal */}
+      {/* Modal */}
       {open && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
-          <div className="bg-[#1A2238] rounded-2xl p-6 w-full max-w-2xl relative">
-            <button onClick={() => setOpen(false)} className="absolute top-4 right-4 text-white text-xl font-bold">×</button>
-            <h2 className="text-3xl font-bold text-white mb-2">Registration</h2>
-            <p className="text-gray-400 mb-6">Fill the form to enter the tournament lobby.</p>
-            <form className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-              <input placeholder="In-Game ID" className="bg-[#111827] text-white px-4 py-3 rounded-md border border-gray-600" />
-              <input placeholder="Email" className="bg-[#111827] text-white px-4 py-3 rounded-md border border-gray-600" />
-              <input placeholder="Team Name" className="bg-[#111827] text-white px-4 py-3 rounded-md border border-gray-600" />
-              <input placeholder="Number of Players" className="bg-[#111827] text-white px-4 py-3 rounded-md border border-gray-600" />
-              <select
-                value={rank}
-                onChange={(e) => setRank(e.target.value)}
-                className="bg-[#111827] text-white px-4 py-3 rounded-md border border-gray-600 col-span-full sm:col-span-2"
-              >
-                <option value="">Select Rank</option>
-                <option>Iron</option>
-                <option>Bronze</option>
-                <option>Silver</option>
-                <option>Gold</option>
-                <option>Platinum</option>
-                <option>Diamond</option>
-                <option>Ascendant</option>
-                <option>Immortal</option>
-                <option>Radiant</option>
-              </select>
-
-              <div className="col-span-full flex items-start gap-2">
-                <input
-                  type="checkbox"
-                  checked={agreed}
-                  onChange={(e) => setAgreed(e.target.checked)}
-                  className="mt-1"
-                />
-                <label className="text-gray-300">
-                  I agree to the tournament rules, fair play policy, and terms of participation.
-                </label>
-              </div>
-
-              <div className="col-span-full mt-2">
-                <Button
-                  type="submit"
-                  disabled={!agreed}
-                  className={`w-full text-white text-lg font-bold py-3 rounded-xl ${agreed ? "bg-[#8B5CF6] hover:bg-[#6B21A8]" : "bg-gray-500 cursor-not-allowed"}`}
-                >
-                  Submit
-                </Button>
-              </div>
-            </form>
-          </div>
-        </div>
+        <TournamentRegistrationModal
+          tournamentId={tournamentId}
+          rank={tournamentDetail?.rank ?? undefined}
+          setOpen={(val: boolean) => setOpen(val)}
+          reFetchDetails={(id: string) => getTournament(id)}
+        />
       )}
 
       {/* tabs */}
-     <div className="bg-[#0F172A] px-4 sm:px-10 pt-14">
+      <div className="bg-[#0F172A] px-4 sm:px-10 pt-14">
         <div className="overflow-x-auto">
           <ul className="flex flex-nowrap justify-start sm:justify-center gap-4 sm:gap-8 text-sm font-semibold text-[#9CA3AF] border-b border-[#1F2430] w-fit mx-auto">
             {tabs.map((tab) => (
@@ -181,21 +237,21 @@ export default function TournamentInfoPage() {
                     <InfoCard
                       icon={<FaGamepad className="text-white text-3xl" />}
                       label="Game"
-                      value="VALORANT"
+                      value={tournamentDetail?.game}
                     />
                     <InfoCard
                       icon={
                         <MdDateRange className="text-orange-400 text-3xl" />
                       }
                       label="Date/Time"
-                      value="Wed, June 11, 04:00 PM"
+                      value={`${startsAtDateParts.day}, ${startsAtDateParts.month} ${startsAtDateParts.date} ${startsAtDateParts.year}, ${startsAtDateParts.time}`}
                     />
                     <InfoCard
                       icon={
                         <PiUsersThreeFill className="text-blue-400 text-3xl" />
                       }
                       label="Team size"
-                      value="5v5"
+                      value={tournamentDetail?.teamSize}
                     />
                     <InfoCard
                       icon={
@@ -208,7 +264,11 @@ export default function TournamentInfoPage() {
                         />
                       }
                       label="Entry prize"
-                      value="Per person Free"
+                      value={
+                        tournamentDetail?.entryPrize
+                          ? `₹${tournamentDetail.entryPrize}`
+                          : "FREE"
+                      }
                     />
                     <InfoCard
                       icon={
@@ -221,7 +281,7 @@ export default function TournamentInfoPage() {
                         />
                       }
                       label="Prize pool"
-                      value="₹2000"
+                      value={`₹${tournamentDetail?.prizePool}`}
                     />
                     <InfoCard
                       icon={
@@ -234,7 +294,7 @@ export default function TournamentInfoPage() {
                         />
                       }
                       label="Format"
-                      value="Single Elimination"
+                      value={tournamentDetail?.format}
                     />
                   </div>
                 </div>
@@ -243,30 +303,27 @@ export default function TournamentInfoPage() {
                 <div className="space-y-6">
                   <h2 className="text-2xl font-bold">Tournament Information</h2>
                   <ul className="list-disc list-inside text-gray-300 space-y-2">
-                    <li>Tournament format: Single elimination 5v5</li>
+                    <li>
+                      Tournament format: {tournamentDetail?.format}{" "}
+                      {tournamentDetail?.teamSize}
+                    </li>
                     <li>
                       Server: Mumbai / Singapore (decided by mutual agreement)
                     </li>
                   </ul>
 
-                  <div>
-                    <h3 className="text-lg font-bold mb-2">Rules</h3>
-                    <ul className="list-disc list-inside text-gray-300 space-y-2">
-                      <li>
-                        A game that has been played past the first round is
-                        deemed valid. If your game host starts with wrong
-                        settings, report it to admins before match starts.
-                      </li>
-                      <li>
-                        Verify your results in the lobby even if you lose.
-                      </li>
-                      <li>You must follow the Ban/Pick Order.</li>
-                      <li>Default settings are Cheats: OFF</li>
-                      <li>
-                        If no server agreement, Frankfurt 1/2 should be used.
-                      </li>
-                    </ul>
-                  </div>
+                  {tournamentDetail?.rules?.length !== 0 && (
+                    <div>
+                      <h3 className="text-lg font-bold mb-2">Rules</h3>
+                      <ul className="list-disc list-inside text-gray-300 space-y-2">
+                        {tournamentDetail?.rules?.map(
+                          (rule: any, index: number) => (
+                            <li key={index}>{rule}</li>
+                          )
+                        )}
+                      </ul>
+                    </div>
+                  )}
 
                   <div>
                     <h3 className="text-lg font-bold mb-2">Help</h3>
@@ -292,14 +349,16 @@ export default function TournamentInfoPage() {
                   <div className="w-full h-auto p-4 rounded-xl border border-[#2F384C] flex flex-row sm:flex-row justify-between items-center gap-4 sm:gap-0 text-sm text-blue-300">
                     <div className="text-center flex-1">
                       <p className="font-medium">Registered</p>
-                      <p className="text-white text-lg font-normal">15</p>
+                      <p className="text-white text-lg font-normal">
+                        {noOfRegistredTeam * 5}
+                      </p>
                     </div>
-                    <div className="text-center flex-1">
+                    {/* <div className="text-center flex-1">
                       <p className="font-medium flex items-center justify-center gap-1">
                         Ready
                       </p>
                       <p className="text-white text-lg font-normal">10</p>
-                    </div>
+                    </div> */}
                     <div className="text-center flex-1">
                       <p className="font-medium">Slots</p>
                       <p className="text-white text-lg font-normal">20</p>
@@ -310,30 +369,30 @@ export default function TournamentInfoPage() {
                   <h3 className="text-xl font-bold">Timeline</h3>
                   <div className="space-y-5">
                     <TimelineItem
-                      date="JUN"
-                      day="11"
-                      time="Wed 04:00 PM"
+                      date={registrationOpenAtDateParts.month}
+                      day={registrationOpenAtDateParts.date}
+                      time={`${registrationOpenAtDateParts.day} ${registrationOpenAtDateParts.time}`}
                       title="Ready window opens"
                       description="Ready up and verify that you're eligible to play."
                     />
                     <TimelineItem
-                      date="JUN"
-                      day="11"
-                      time="Wed 05:00 PM"
+                      date={registrationCloseAtDateParts.month}
+                      day={registrationCloseAtDateParts.date}
+                      time={`${registrationCloseAtDateParts.day} ${registrationCloseAtDateParts.time}`}
                       title="Registration closes"
                       description="You can no longer register."
                     />
                     <TimelineItem
-                      date="JUN"
-                      day="11"
-                      time="Wed 05:00 PM"
+                      date={registrationCloseAtDateParts.month}
+                      day={registrationCloseAtDateParts.date}
+                      time={`${registrationCloseAtDateParts.day} ${registrationCloseAtDateParts.time}`}
                       title="Ready window closes"
                       description="You can no longer ready up."
                     />
                     <TimelineItem
-                      date="JUN"
-                      day="11"
-                      time="Wed 05:00 PM"
+                      date={startsAtDateParts.month}
+                      day={startsAtDateParts.date}
+                      time={`${startsAtDateParts.day} ${startsAtDateParts.time}`}
                       title="Start"
                       description="The tournament starts and you will get notified about your first match."
                     />
@@ -344,16 +403,14 @@ export default function TournamentInfoPage() {
           )}
         </div>
         {activeTab === "standings" && (
-  <div className="px-4 sm:px-10 py-10">
-    <Standings />
-  </div>
-)}
+          <div className="px-4 sm:px-10 py-10">
+            <Standings />
+          </div>
+        )}
       </main>
     </main>
   );
 }
-
-
 
 function InfoCard({
   icon,
