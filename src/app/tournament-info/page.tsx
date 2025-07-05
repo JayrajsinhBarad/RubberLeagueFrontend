@@ -289,7 +289,7 @@ export default function TournamentInfoPage() {
               <div className="xl:col-span-1 space-y-10">
                 <div className="space-y-3">
                   <h3 className="text-xl font-bold p-2 rounded">Teams</h3>
-                  <div className="w-full h-auto p-4 rounded-xl border border-[#2F384C] flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-0 text-sm text-blue-300">
+                  <div className="w-full h-auto p-4 rounded-xl border border-[#2F384C] flex flex-row sm:flex-row justify-between items-center gap-4 sm:gap-0 text-sm text-blue-300">
                     <div className="text-center flex-1">
                       <p className="font-medium">Registered</p>
                       <p className="text-white text-lg font-normal">15</p>
