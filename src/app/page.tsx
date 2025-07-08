@@ -8,6 +8,7 @@ import Footer from "../components/Footer";
 import { getTournaments } from "@/services/api";
 
 export default function Home() {
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   const [tournaments, setTournaments] = useState<any>([])
 
   const getTournamentList = async () => {
@@ -51,6 +52,7 @@ export default function Home() {
         {tournaments.length === 0 ? (
           <div className="text-center text-gray-500 mt-10">No tournaments found.</div>
         ) : (
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
           tournaments.map((tournament: any, index: number) => (
             <Link
               key={`tournament-card-${index}`}

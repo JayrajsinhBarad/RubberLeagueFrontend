@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { DateParts, formattedDateParts } from "@/app/tournament-info/[tournamentId]/page";
 
 export interface TournamentCardProps {
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   tournamentDetail: any
 }
 

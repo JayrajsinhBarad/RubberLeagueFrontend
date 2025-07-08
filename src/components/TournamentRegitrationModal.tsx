@@ -70,6 +70,7 @@ const TournamentRegistrationModal = ({
       await registerToTournament(tournamentId, data);
       await reFetchDetails(tournamentId);
       toast.success("Registered successfully!");
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
     } catch (error: any) {
       toast.error(error.message || "Registration failed");
     } finally {
