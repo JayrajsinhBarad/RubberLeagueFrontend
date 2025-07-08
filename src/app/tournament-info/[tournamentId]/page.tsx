@@ -11,6 +11,9 @@ import TournamentRegistrationModal from "@/components/TournamentRegitrationModal
 import { getTournamentById } from "@/services/api";
 import { getFormattedDateParts, getTimeDiff } from "@/helpers/formatDateTime";
 
+
+
+
 export interface DateParts {
   month: string;
   date: string;
@@ -34,7 +37,8 @@ export default function TournamentInfoPage(props: {
   const [activeTab, setActiveTab] = useState("overview");
   const [open, setOpen] = useState(false);
   const tabs = ["overview", "standings", "matches", "teams", "prizes"];
-  const [tournamentDetail, setTournamentDetail] = useState<any>();
+   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+  const [tournamentDetail, setTournamentDetail] = useState<any>({}); 
   const [timeLeft, setTimeLeft] = useState({
     hoursRemaining: 0,
     hhmmssRemaining: "00:00:00",
@@ -56,11 +60,8 @@ export default function TournamentInfoPage(props: {
     getTournament(tournamentId);
   }, [tournamentId]);
 
-  const manageFormattedDateParts = ({
-    startsAt,
-    registrationOpenAt,
-    registrationCloseAt,
-  }: any) => {
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+  const manageFormattedDateParts = ({ startsAt, registrationOpenAt, registrationCloseAt}: any) => {
     const startsAtDateParts = getFormattedDateParts(startsAt);
     setStartsAtDateParts(startsAtDateParts);
 
@@ -316,6 +317,7 @@ export default function TournamentInfoPage(props: {
                     <div>
                       <h3 className="text-lg font-bold mb-2">Rules</h3>
                       <ul className="list-disc list-inside text-gray-300 space-y-2">
+                      {{/* eslint-disable  @typescript-eslint/no-explicit-any */}}
                         {tournamentDetail?.rules?.map(
                           (rule: any, index: number) => (
                             <li key={index}>{rule}</li>

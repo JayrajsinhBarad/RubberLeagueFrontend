@@ -8,6 +8,7 @@ import { Toaster } from "react-hot-toast";
 const inter = Inter({
   subsets: ['latin'],
   weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
+  variable: '--font-inter',
 });
 
 const geistSans = Geist({
@@ -33,8 +34,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} ${geistSans.variable} ${geistMono.variable} antialiased bg-[#0F111A] text-white`}
-      >
+      <body className={`${inter.variable} ${geistSans.variable} ${geistMono.variable} antialiased bg-[#0F111A] text-white`}>
+
         <Header />
         {children}
         <Toaster position="top-right" />

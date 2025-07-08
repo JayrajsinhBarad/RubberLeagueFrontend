@@ -3,37 +3,50 @@ import axios from "axios";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_ENDPOINT || "";
 
-export async function getTournaments(): Promise<any> {
+export type Tournament = {
+  id: string;
+  name: string;
+  date: string;
+  // Add other fields as per your API response
+};
+
+export async function getTournaments(): Promise<Tournament[]> {
   try {
-    const { data } = await axios.get(`${BASE_URL}/api/tournament`, {
+    const { data } = await axios.get<Tournament[]>(`${BASE_URL}/api/tournament`, {
       headers: {
         "Content-Type": "application/json",
       },
     });
 
     return data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error while fetching tournaments:", error);
-    throw { message: error.response?.data?.message || "Something went wrong" };
+    if (axios.isAxiosError(error)) {
+      throw { message: error.response?.data?.message || "Something went wrong" };
+    }
+    throw { message: "Something went wrong" };
   }
 }
 
-export async function getTournamentById(id: string): Promise<any> {
+export async function getTournamentById(id: string): Promise<Tournament> {
   try {
-    const { data } = await axios.get(`${BASE_URL}/api/tournament/${id}`, {
+    const { data } = await axios.get<Tournament>(`${BASE_URL}/api/tournament/${id}`, {
       headers: {
         "Content-Type": "application/json",
       },
     });
 
     return data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error while fetching tournaments:", error);
-    throw { message: error.response?.data?.message || "Something went wrong" };
+    if (axios.isAxiosError(error)) {
+      throw { message: error.response?.data?.message || "Something went wrong" };
+    }
+    throw { message: "Something went wrong" };
   }
 }
 
-export async function registerToTournament(tournamentId: string, data: RegistrationValues): Promise<any> {
+export async function registerToTournament(tournamentId: string, data: RegistrationValues): Promise<void> {
   try {
     await axios.post(
       `${BASE_URL}/api/team`,
@@ -47,9 +60,12 @@ export async function registerToTournament(tournamentId: string, data: Registrat
         }
       }
     )
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error while registering to tournament:", error);
-    throw { message: error.response?.data?.message || "Something went wrong" };
+    if (axios.isAxiosError(error)) {
+      throw { message: error.response?.data?.message || "Something went wrong" };
+    }
+    throw { message: "Something went wrong" };
   }
 }
 
