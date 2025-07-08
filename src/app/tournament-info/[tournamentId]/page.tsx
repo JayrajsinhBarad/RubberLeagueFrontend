@@ -30,10 +30,12 @@ export const formattedDateParts: DateParts = {
   day: "",
 };
 
-export default function TournamentInfoPage(props: {
-  params: Promise<{ tournamentId: string }>;
-}) {
-  const { tournamentId } = use(props.params);
+// eslint-disable-next-line  @typescript-eslint/no-explicit-any
+export default function TournamentInfoPage(props: any) {
+  
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+  const {tournamentId}: any = use(props.params);
+  
   const [activeTab, setActiveTab] = useState("overview");
   const [open, setOpen] = useState(false);
   const tabs = ["overview", "standings", "matches", "teams", "prizes"];
