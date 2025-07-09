@@ -1,9 +1,8 @@
 import TournamentPageComponent from '@/components/TournamentPageComponent';
 import React from 'react'
 
-export default function page({params}: {params: {tournamentId: string}}) {
-
-  const { tournamentId } = params;
+export default async function page({params}: {params: Promise<{ tournamentId: string }>}) {
+const { tournamentId } = await params;
 
   return (
     <TournamentPageComponent tournamentId={tournamentId} />
