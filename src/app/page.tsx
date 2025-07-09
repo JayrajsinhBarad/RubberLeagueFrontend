@@ -56,7 +56,7 @@ export default function Home() {
           tournaments.map((tournament: any, index: number) => (
             <Link
               key={`tournament-card-${index}`}
-              href={`./tournament-info/${tournament.id}`}
+              href={`/tournament-info/${tournament.id}`}
               className="block w-fit"
             >
               <TournamentCard tournamentDetail={tournament} />

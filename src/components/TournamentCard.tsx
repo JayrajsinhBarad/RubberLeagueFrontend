@@ -2,7 +2,8 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import Image from "next/image";
 import { getFormattedDateParts } from "@/helpers/formatDateTime";
 import { useEffect, useState } from "react";
-import { DateParts, formattedDateParts } from "@/app/tournament-info/[tournamentId]/page";
+import { DateParts,formattedDateParts } from "@/types";
+
 
 export interface TournamentCardProps {
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
