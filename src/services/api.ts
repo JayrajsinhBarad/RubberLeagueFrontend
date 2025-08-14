@@ -1,7 +1,7 @@
 import { RegistrationValues } from "@/components/TournamentRegitrationModal";
 import axios from "axios";
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_ENDPOINT || "";
+const BASE_URL = "https://api.rubberleague.org";
 
 export type Tournament = {
   id: string;
